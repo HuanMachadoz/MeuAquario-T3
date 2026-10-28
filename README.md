@@ -117,19 +117,13 @@ Toda chamada de DAO passa pelo `Repositorio` e roda em `CoroutineScope(Dispatche
 
 ## 4. O que quebrou na migração
 
-**A lista deixou de se redesenhar sozinha.** `mutableStateListOf` avisava o Compose. `suspend fun` não pode ser chamada no meio do composable. Cada tela passou a ter o seu `mutableStateOf<List<...>>` e a preencher depois da leitura.
+**A lista deixou de se redesenhar sozinha.** Huan esbarrou nisso ao tirar a lista da memória. `mutableStateListOf` avisava o Compose. `suspend fun` não pode ser chamada no meio do composable, e a tela abria vazia mesmo com linha no banco. Cada tela passou a ter o seu `mutableStateOf<List<...>>` e a preencher depois da leitura.
 
-**Voltar do formulário mostrava a lista velha.** `LaunchedEffect(Unit)` roda uma vez. O helper `lembrarGatilhoDeRecarga()` (`ui/componentes/CicloDeVida.kt`) observa `ON_RESUME` e incrementa um inteiro. Esse inteiro é a chave do `LaunchedEffect`, então a lista busca de novo quando a tela reaparece.
+**Voltar do formulário mostrava a lista velha.** Felipe salvou um aquário, voltou, e o cartão não estava na lista. `LaunchedEffect(Unit)` roda uma vez, antes do insert. O helper `lembrarGatilhoDeRecarga()` (`ui/componentes/CicloDeVida.kt`) observa `ON_RESUME` e incrementa um inteiro. Esse inteiro é a chave do `LaunchedEffect`, então a lista busca de novo quando a tela reaparece.
 
-**A conta de ocupação lia a outra lista direto.** `litrosOcupados(aquarioId)` ia no `mutableStateListOf` de espécies. Agora `litrosOcupados(especies)`, `percentualOcupacao(aquario, litros)` e `aquariosSuperlotados(aquarios, especies)` recebem o que já foi lido. A UI faz duas leituras e cruza.
+**A conta de ocupação lia a outra lista direto.** Huan e Felipe viram o tanque aparecer tranquilo com o banco já cheio, porque `litrosOcupados(aquarioId)` ia no `mutableStateListOf` de espécies. Agora `litrosOcupados(especies)`, `percentualOcupacao(aquario, litros)` e `aquariosSuperlotados(aquarios, especies)` recebem o que já foi lido. A UI faz duas leituras e cruza.
 
 **`return` no meio de composable continua proibido.** Isso já tinha derrubado o formulário de espécie no Trabalho 2. As telas de detalhe tratam "não achou no banco" com `when`, não com `return`.
-
-Três pontos em que a gente travou de verdade:
-
-- **Huan, lista que não redesenhava.** No Trabalho 2 o `mutableStateListOf` avisava a tela sozinho. Com o Room a leitura virou `suspend` e não pode ficar no meio do composable. A tela ficava vazia mesmo com linha no banco. Cada tela ganhou um `mutableStateOf` e só preenche depois que o DAO responde.
-- **Felipe, formulário que não aparecia na lista.** Salvava, voltava, e o cartão novo não estava lá. O `LaunchedEffect(Unit)` tinha rodado uma vez só, antes do insert. O `lembrarGatilhoDeRecarga()` observa o `ON_RESUME` e força a busca de novo quando a tela reaparece.
-- **huan e felipe, ocupação furada.** A conta de litros ainda lia a lista velha da memória, então o tanque aparecia tranquilo com o banco já cheio. `litrosOcupados`, `percentualOcupacao` e `aquariosSuperlotados` passaram a receber as listas que a tela acabou de ler.
 
 ---
 
