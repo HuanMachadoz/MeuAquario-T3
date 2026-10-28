@@ -74,18 +74,22 @@ fun TelaNovaEspecie(navController: NavHostController, aquarioPreSelecionadoId: I
     var aquarios by remember { mutableStateOf<List<Aquario>>(emptyList()) }
     var especies by remember { mutableStateOf<List<br.edu.up.meuaquario.dados.Especie>>(emptyList()) }
 
-    LaunchedEffect(Unit) {
-        try {
-            val a = Repositorio.buscarAquarios()
-            val e = Repositorio.buscarEspecies()
-            withContext(Dispatchers.Main) {
-                aquarios = a
-                especies = e
+    fun carregarAquarios() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val a = Repositorio.buscarAquarios()
+                val e = Repositorio.buscarEspecies()
+                withContext(Dispatchers.Main) {
+                    aquarios = a
+                    especies = e
+                }
+            } catch (ex: Exception) {
+                android.util.Log.e("TelaNovaEspecie", "Erro ao carregar aquarios", ex)
             }
-        } catch (ex: Exception) {
-            android.util.Log.e("TelaNovaEspecie", "Erro ao carregar aquarios", ex)
         }
     }
+
+    LaunchedEffect(Unit) { carregarAquarios() }
 
     var nome by rememberSaveable { mutableStateOf("") }
     var nomeCientifico by rememberSaveable { mutableStateOf("") }

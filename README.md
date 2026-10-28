@@ -125,6 +125,12 @@ Toda chamada de DAO passa pelo `Repositorio` e roda em `CoroutineScope(Dispatche
 
 **`return` no meio de composable continua proibido.** Isso já tinha derrubado o formulário de espécie no Trabalho 2. As telas de detalhe tratam "não achou no banco" com `when`, não com `return`.
 
+Três pontos em que a gente travou de verdade:
+
+- **Huan, lista que não redesenhava.** No Trabalho 2 o `mutableStateListOf` avisava a tela sozinho. Com o Room a leitura virou `suspend` e não pode ficar no meio do composable. A tela ficava vazia mesmo com linha no banco. Cada tela ganhou um `mutableStateOf` e só preenche depois que o DAO responde.
+- **Felipe, formulário que não aparecia na lista.** Salvava, voltava, e o cartão novo não estava lá. O `LaunchedEffect(Unit)` tinha rodado uma vez só, antes do insert. O `lembrarGatilhoDeRecarga()` observa o `ON_RESUME` e força a busca de novo quando a tela reaparece.
+- **Os dois, ocupação furada.** A conta de litros ainda lia a lista velha da memória, então o tanque aparecia tranquilo com o banco já cheio. `litrosOcupados`, `percentualOcupacao` e `aquariosSuperlotados` passaram a receber as listas que a tela acabou de ler.
+
 ---
 
 ## 5. Teste de persistência
@@ -140,8 +146,6 @@ Procedimento que prova a seção 3.2:
 7. Apague esse aquário pela lixeira, feche e abra. Ele não volta.
 
 Vídeo desse teste: https://www.youtube.com/watch?v=6bwyBQQJHkA
-
- 
 
 ---
 
@@ -180,4 +184,4 @@ Não há servidor, login nem API. O banco é o SQLite local do Room, no aparelho
 - [x] `AppDatabase` singleton
 - [x] Listas, inclusão, edição e remoção passam pelo banco
 - [x] Operações de banco em `Dispatchers.IO`, com `try/catch` e `Log.e`
-- [ ] Vídeo do teste de fechar e reabrir (seção 5) — gravar e colocar o link acima
+- [x] Vídeo do teste de fechar e reabrir (seção 5)

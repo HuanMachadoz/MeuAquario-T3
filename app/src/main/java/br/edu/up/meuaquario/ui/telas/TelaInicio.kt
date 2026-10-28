@@ -65,7 +65,9 @@ import br.edu.up.meuaquario.ui.theme.VerdeOk
 import br.edu.up.meuaquario.ui.theme.VerdeSuave
 import br.edu.up.meuaquario.ui.theme.VermelhoAlerta
 import br.edu.up.meuaquario.ui.theme.VermelhoSuave
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,18 +78,22 @@ fun TelaInicio(navController: NavHostController) {
     var aquarios by remember { mutableStateOf<List<Aquario>>(emptyList()) }
     var especies by remember { mutableStateOf<List<Especie>>(emptyList()) }
 
-    LaunchedEffect(gatilho) {
-        try {
-            val a = Repositorio.buscarAquarios()
-            val e = Repositorio.buscarEspecies()
-            withContext(Dispatchers.Main) {
-                aquarios = a
-                especies = e
+    fun recarregar() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val a = Repositorio.buscarAquarios()
+                val e = Repositorio.buscarEspecies()
+                withContext(Dispatchers.Main) {
+                    aquarios = a
+                    especies = e
+                }
+            } catch (ex: Exception) {
+                android.util.Log.e("TelaInicio", "Erro ao carregar dados", ex)
             }
-        } catch (ex: Exception) {
-            android.util.Log.e("TelaInicio", "Erro ao carregar dados", ex)
         }
     }
+
+    LaunchedEffect(gatilho) { recarregar() }
 
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),

@@ -40,6 +40,10 @@ import br.edu.up.meuaquario.ui.telas.TelaListaAquarios
 import br.edu.up.meuaquario.ui.telas.TelaListaEspecies
 import br.edu.up.meuaquario.ui.telas.TelaNovaEspecie
 import br.edu.up.meuaquario.ui.telas.TelaNovoAquario
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun AppMeuAquario() {
@@ -49,8 +53,14 @@ fun AppMeuAquario() {
     var pronto by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        Repositorio.iniciar(context)
-        pronto = true
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                Repositorio.iniciar(context)
+            } catch (ex: Exception) {
+                android.util.Log.e("AppMeuAquario", "Erro ao iniciar o banco", ex)
+            }
+            withContext(Dispatchers.Main) { pronto = true }
+        }
     }
 
     if (!pronto) {
