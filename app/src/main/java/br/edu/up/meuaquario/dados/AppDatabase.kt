@@ -34,7 +34,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "meuaquario.db"
-                ).fallbackToDestructiveMigration().build().also { INSTANCIA = it }
+                ).fallbackToDestructiveMigration(true).build().also { INSTANCIA = it }
             }
         }
     }

@@ -16,7 +16,7 @@ Este repositório é a continuação do Trabalho 2. As telas, a navegação e os
 1. **File → Open** e escolha a pasta deste repositório (a que contém `settings.gradle.kts`).
 2. Espere o Gradle sync terminar. Se pedir para baixar o SDK 34 ou aceitar licença, aceite.
 3. O Android Studio cria o `local.properties` sozinho, apontando para o SDK da máquina. Esse arquivo não vai no Git.
-4. Escolha um emulador (API 24 ou maior; o projeto usa `minSdk` 24 e `compileSdk` 34) ou um aparelho com depuração USB.
+4. Escolha o emulador (Pixel 10a ou outro com API 24 ou maior) ou um aparelho com depuração USB.
 5. Clique em **Run**.
 
 Na primeira abertura o banco está vazio, então o app grava quatro aquários e seis espécies de exemplo. A partir daí, tudo que for adicionado, editado ou removido fica no arquivo `meuaquario.db`.
@@ -33,9 +33,7 @@ O APK sai em `app/build/outputs/apk/debug/app-debug.apk`.
 adb install -r app\build\outputs\apk\debug\app-debug.apk
 ```
 
-O Gradle deste projeto é o **8.5** e o Android Gradle Plugin é o **8.2.0**. Os dois compilam com **JDK 17**. No Android Studio, em *Settings → Build, Execution, Deployment → Build Tools → Gradle → Gradle JDK*, use o JDK 17 (ou o *Embedded JDK* se ele for 17). JDK 21.0.10 da Oracle quebra o `jlink` nessa versão do plugin, e JDK 25 ainda não é aceito pelo AGP 8.2.
-
-Versões: AGP 8.2.0 · Kotlin 1.9.22 · KSP 1.9.22-1.0.17 · Room 2.6.1 · Compose BOM 2024.02.01 · Navigation Compose 2.7.7 · `compileSdk` 34 · `minSdk` 24.
+Versões: AGP 9.4.0 · Gradle 9.6.0 · Room 2.7.2 · Compose BOM 2024.02.01 · Navigation Compose 2.7.7 · `compileSdk` 35 · `minSdk` 24.
 
 ---
 
@@ -98,7 +96,7 @@ Não há `JOIN`. As duas tabelas são pequenas; a tela lê as duas e cruza em me
 abstract class AppDatabase : RoomDatabase()
 ```
 
-O `companion object` guarda a instância em `@Volatile` e cria com `synchronized` + `Room.databaseBuilder(..., "meuaquario.db")`. `fallbackToDestructiveMigration()` está aqui porque ainda é a versão 1: se o esquema mudar numa entrega futura, a versão sobe e a migração entra no lugar desse fallback. `exportSchema = false` evita o aviso do KSP pedindo pasta de schema, que este trabalho não pede.
+O `companion object` guarda a instância em `@Volatile` e cria com `synchronized` + `Room.databaseBuilder(..., "meuaquario.db")`. `fallbackToDestructiveMigration(true)` está aqui porque ainda é a versão 1: se o esquema mudar numa entrega futura, a versão sobe e a migração entra no lugar desse fallback. `exportSchema = false` evita o aviso do KSP pedindo pasta de schema, que este trabalho não pede.
 
 ---
 
@@ -126,8 +124,6 @@ Toda chamada de DAO passa pelo `Repositorio` e roda em `CoroutineScope(Dispatche
 **A conta de ocupação lia a outra lista direto.** `litrosOcupados(aquarioId)` ia no `mutableStateListOf` de espécies. Agora `litrosOcupados(especies)`, `percentualOcupacao(aquario, litros)` e `aquariosSuperlotados(aquarios, especies)` recebem o que já foi lido. A UI faz duas leituras e cruza.
 
 **`return` no meio de composable continua proibido.** Isso já tinha derrubado o formulário de espécie no Trabalho 2. As telas de detalhe tratam "não achou no banco" com `when`, não com `return`.
-
-**O build no JDK 21 da Oracle.** `compileDebugJavaWithJavac` falha no `jlink` com o `core-for-system-modules.jar` do SDK 34. O projeto compila com JDK 17. Não é regra de código; é o JDK da máquina.
 
 ---
 
