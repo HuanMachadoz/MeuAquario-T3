@@ -129,7 +129,7 @@ Três pontos em que a gente travou de verdade:
 
 - **Huan, lista que não redesenhava.** No Trabalho 2 o `mutableStateListOf` avisava a tela sozinho. Com o Room a leitura virou `suspend` e não pode ficar no meio do composable. A tela ficava vazia mesmo com linha no banco. Cada tela ganhou um `mutableStateOf` e só preenche depois que o DAO responde.
 - **Felipe, formulário que não aparecia na lista.** Salvava, voltava, e o cartão novo não estava lá. O `LaunchedEffect(Unit)` tinha rodado uma vez só, antes do insert. O `lembrarGatilhoDeRecarga()` observa o `ON_RESUME` e força a busca de novo quando a tela reaparece.
-- **Os dois, ocupação furada.** A conta de litros ainda lia a lista velha da memória, então o tanque aparecia tranquilo com o banco já cheio. `litrosOcupados`, `percentualOcupacao` e `aquariosSuperlotados` passaram a receber as listas que a tela acabou de ler.
+- **huan e felipe, ocupação furada.** A conta de litros ainda lia a lista velha da memória, então o tanque aparecia tranquilo com o banco já cheio. `litrosOcupados`, `percentualOcupacao` e `aquariosSuperlotados` passaram a receber as listas que a tela acabou de ler.
 
 ---
 
