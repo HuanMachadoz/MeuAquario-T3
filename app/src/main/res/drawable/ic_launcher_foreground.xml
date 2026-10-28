@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- corpo do peixe -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M42,56 C42,46 52,38 63,38 C74,38 81,46 87,56 C81,66 74,74 63,74 C52,74 42,66 42,56 Z" />
+
+    <!-- cauda -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M42,56 L24,42 L27,56 L24,70 Z" />
+
+    <!-- olho -->
+    <path
+        android:fillColor="#0B7285"
+        android:pathData="M74,51 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" />
+
+    <!-- bolhas -->
+    <path
+        android:fillColor="#B2F2F7"
+        android:pathData="M34,30 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" />
+    <path
+        android:fillColor="#B2F2F7"
+        android:pathData="M44,22 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0" />
+</vector>

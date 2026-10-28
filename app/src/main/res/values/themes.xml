@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      O tema visual de verdade é feito em Compose (ui/theme/Theme.kt).
+      Este tema XML serve apenas para a janela do app abrir sem a barra de
+      título padrão do Android antes do Compose assumir a tela.
+    -->
+    <style name="Theme.MeuAquario" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/fundo_app</item>
+    </style>
+</resources>

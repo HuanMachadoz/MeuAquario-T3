@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="fundo_app">#F1F8FA</color>
+    <color name="aqua_primary">#0B7285</color>
+    <color name="aqua_primary_dark">#075063</color>
+</resources>
