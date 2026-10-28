@@ -139,7 +139,9 @@ Procedimento que prova a seção 3.2:
 6. Abra uma espécie, mude a quantidade com **+**, repita o fechar e abrir. A quantidade nova continua.
 7. Apague esse aquário pela lixeira, feche e abra. Ele não volta.
 
-Vídeo desse teste: 
+Vídeo desse teste: https://www.youtube.com/watch?v=6bwyBQQJHkA
+
+ 
 
 ---
 
